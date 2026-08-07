@@ -194,6 +194,15 @@ section{padding:8px 0;}
 .carpool > b{display:block;font-size:1rem;font-weight:800;color:var(--pink);margin-bottom:6px;}
 .carpool p{font-size:.9rem;color:var(--ink-2);line-height:1.7;}
 .carpool p b{color:var(--pink);font-weight:700;}
+.chatbox{background:#fff;border:1px solid rgba(194,73,122,.28);border-radius:11px;
+  margin-top:14px;overflow:hidden;}
+.chatbox__row{display:grid;grid-template-columns:82px 1fr;gap:10px;align-items:baseline;
+  padding:11px 14px;border-bottom:1px solid rgba(194,73,122,.14);}
+.chatbox__row:last-child{border-bottom:none;}
+.chatbox__row span{font-size:.76rem;font-weight:700;letter-spacing:.08em;color:var(--pink);}
+.chatbox__row b{font-size:.92rem;font-weight:700;color:var(--green);word-break:break-all;line-height:1.5;}
+.chatbox__row b.pending{color:#9AA093;font-weight:500;}
+.carpool__note{font-size:.83rem;color:var(--ink-2);margin-top:12px;line-height:1.65;}
 
 /* ---------- 신청 ---------- */
 .apply{background:linear-gradient(160deg,#FFFDF6 0%,#F1F7E9 100%);
@@ -514,7 +523,7 @@ footer{margin-top:44px;background:#fff;border-top:1px solid var(--line);padding:
       <div class="wcard">
         <div class="wcard__k">자가용</div>
         <div class="wcard__v">호남제일문 → 공덕 → 익산산업도로
-          <small>학교 주차장이 협소합니다. 가능하면 대중교통이나 카풀을 이용해 주세요.</small>
+          <small>교내 주차 공간이 넉넉합니다. 차량으로 편하게 오세요.</small>
         </div>
       </div>
 
@@ -530,10 +539,23 @@ footer{margin-top:44px;background:#fff;border-top:1px solid var(--line);padding:
       </div>
 
       <div class="carpool">
-        <b>🚗 카풀 함께 타요</b>
-        <p>혼자 익산까지 오시기 부담되시죠. 신청서에 <b>출발 지역</b>과
-           <b>차량 여석 / 동승 희망</b>을 적어주시면, 같은 지역에서 오시는 분들끼리 연결해 드립니다.
-           운전 부담도 기름값도 나누고, 오가는 길이 훨씬 덜 심심합니다.</p>
+        <b>💬 오픈채팅방에서 만나요</b>
+        <p>행사 안내와 문의, 그리고 <b>카풀 매칭</b>까지 모두
+           <b>한인요가명상연구소 오픈채팅방</b>에서 이루어집니다.
+           출발 지역이 비슷한 분들끼리 방에서 자유롭게 이야기 나누고 함께 타고 오세요.</p>
+
+        <div class="chatbox">
+          <div class="chatbox__row">
+            <span>채팅방 주소</span>
+            <b id="chatUrl" class="pending">개설 후 안내 예정</b>
+          </div>
+          <div class="chatbox__row">
+            <span>참여 코드</span>
+            <b id="chatCode" class="pending">개설 후 안내 예정</b>
+          </div>
+        </div>
+
+        <p class="carpool__note">참가 신청을 마치시면 완료 화면에서 채팅방 주소와 참여 코드를 안내해 드립니다.</p>
       </div>
     </div>
   </section>
@@ -552,7 +574,7 @@ footer{margin-top:44px;background:#fff;border-top:1px solid var(--line);padding:
 
       <p class="apply__note">
         다과와 자리 준비를 위해 미리 신청해 주시면 큰 도움이 됩니다.<br>
-        신청서에서 카풀과 관심 분과도 함께 받습니다.
+        신청을 마치시면 오픈채팅방 주소를 안내해 드립니다.
       </p>
     </div>
   </section>
@@ -578,7 +600,7 @@ footer{margin-top:44px;background:#fff;border-top:1px solid var(--line);padding:
     </div>
 
     <p class="fine">
-      한인요가명상연구소 (KYSMI, Korean Yoga &amp; Sound Meditation Institute)<br>
+      한인요가명상연구소 · KYSMI<br>
       2026년 8월 29일(토) · 원광디지털대학교 익산 본교
     </p>
   </div>
@@ -607,6 +629,25 @@ footer{margin-top:44px;background:#fff;border-top:1px solid var(--line);padding:
   /* ▼▼▼ 구글폼 주소가 정해지면 이 한 줄만 채우면 됩니다 ▼▼▼ */
   var FORM_URL = 'https://forms.gle/MW314gACoEsSV6ab6';
   /* ▲▲▲ 예: 'https://forms.gle/abcd1234'                 ▲▲▲ */
+
+  /* ▼▼▼ 오픈채팅방이 개설되면 이 두 줄만 채우면 됩니다 ▼▼▼ */
+  var CHAT_URL  = '';   // 예: 'https://open.kakao.com/o/gXXXXXXX'
+  var CHAT_CODE = '';   // 예: '2026'  (코드가 없으면 빈칸으로 두세요)
+  /* ▲▲▲                                              ▲▲▲ */
+
+  var cu = document.getElementById('chatUrl');
+  if (CHAT_URL) {
+    cu.classList.remove('pending');
+    cu.innerHTML = '';
+    var a = document.createElement('a');
+    a.href = CHAT_URL; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = CHAT_URL;
+    a.style.color = 'inherit';
+    cu.appendChild(a);
+  }
+  var cc = document.getElementById('chatCode');
+  if (CHAT_CODE) { cc.classList.remove('pending'); cc.textContent = CHAT_CODE; }
+  else if (CHAT_URL) { cc.textContent = '코드 없이 바로 입장'; }
 
   if (FORM_URL) {
     var b = document.getElementById('applyBtn');
